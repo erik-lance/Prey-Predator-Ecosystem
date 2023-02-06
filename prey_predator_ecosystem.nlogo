@@ -1,4 +1,11 @@
 
+; Turtle Breed Types
+breed [ fishermen fisherman ]   ; predator turtles are fishermen
+breed [ fish a-fish ]           ; prey turtles are fish
+
+
+
+
 @#$#@#$#@
 GRAPHICS-WINDOW
 300
