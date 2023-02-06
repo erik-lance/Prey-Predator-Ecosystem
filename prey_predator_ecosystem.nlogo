@@ -6,6 +6,27 @@ breed [ fish a-fish ]           ; prey turtles are fish
 turtles-own [ energy ]          ; energy is used to keep track of how much energy the turtle has
 patches-own [ growth ]          ; timer is used to keep track of how long it's been since food was last spawned
 
+to setup
+    clear-all
+    ask turtles [ set energy 100 ] ; set initial energy for all turtles
+    ask patches [ set growth 0 ]   ; set initial growth for all patches
+    reset-ticks
+end
+
+to go
+    ask turtles [ move ]         ; move all turtles
+    ; ask patches [ spawn-food ]   ; spawn food on all patches
+    tick
+end
+
+to move
+    
+end
+
+to spawn-food
+
+end
+
 
 @#$#@#$#@
 GRAPHICS-WINDOW
