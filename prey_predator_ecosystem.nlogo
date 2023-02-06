@@ -3,7 +3,8 @@
 breed [ fishermen fisherman ]   ; predator turtles are fishermen
 breed [ fish a-fish ]           ; prey turtles are fish
 
-
+turtles-own [ energy ]          ; energy is used to keep track of how much energy the turtle has
+patches-own [ growth ]          ; timer is used to keep track of how long it's been since food was last spawned
 
 
 @#$#@#$#@
