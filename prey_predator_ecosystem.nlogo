@@ -14,8 +14,18 @@ to setup
 end
 
 to go
-    ask turtles [ move ]         ; move all turtles
-    ; ask patches [ spawn-food ]   ; spawn food on all patches
+    ask patches [
+
+    ]
+
+    ask fish [
+    
+    ]
+
+    ask fishermen [
+
+    ]
+
     tick
 end
 
