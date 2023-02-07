@@ -18,8 +18,14 @@ to go
 
     ]
 
+    ; Handles movement of fish
     ask fish [
     
+    ]
+
+    ; Asks fish to try birthing after moving
+    ask fish [
+        birth
     ]
 
     ask fishermen [
@@ -35,6 +41,19 @@ end
 
 to spawn-food
 
+end
+
+; fish breed when they have enough energy
+to birth-fish
+    if ( energy > 300)
+    [
+        set energy energy - 250
+        hatch 1 
+        [ 
+            set energy 100 
+            set heading random 360
+        ]
+    ]
 end
 
 
