@@ -25,7 +25,7 @@ to go
 
     ; Asks fish to try birthing after moving
     ask fish [
-        birth
+        birth-fish
     ]
 
     ask fishermen [
