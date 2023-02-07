@@ -43,6 +43,16 @@ to spawn-food
 
 end
 
+; fish eat plankton when they are on the same patch
+; depending on the growth on patch
+to eat-plankton
+    if (growth > 0)
+    [
+        set energy energy + 10
+        set growth growth - 1
+    ]
+end
+
 ; fish breed when they have enough energy
 to birth-fish
     if ( energy > 300)
