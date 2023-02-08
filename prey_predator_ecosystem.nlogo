@@ -25,7 +25,11 @@ to setup
 
   ]
 
-  create-fishermen fishermen_population [set shape "boat 3" set size 3] ;; temporary placeholder for creating boats
+  create-fishermen fishermen_population [
+    set shape "boat 3"
+    set size 3
+    move-to one-of patches with [pcolor = 92 ]
+  ]
   ask turtles [ set energy 100 ] ; set initial energy for all turtles
   ask patches [ set growth 10 ]   ; set initial growth for all patches
 
@@ -36,13 +40,13 @@ to go
 
 ;  growth of plankton
   ask patches [
-    if (plankton < 10)[
+    if (plankton < plankton_growth_timer)[
       set plankton plankton + plankton_multiply
     ]
-    if (plankton > 10 AND pcolor != 52)[
+    if (plankton > plankton_growth_timer AND pcolor != 52)[
       set pcolor 73
     ]
-    if (plankton < 10 AND pcolor = 73)[
+    if (plankton < plankton_growth_timer AND pcolor = 73)[
       set pcolor 92
     ]
   ]
@@ -89,8 +93,8 @@ end
 to spawn-plankton
   ask patches[
     if pcolor = 92 [
-      set plankton random 15
-      if (plankton > 10) [
+      set plankton random plankton_growth_timer
+      if (plankton = plankton_growth_timer) [
         set pcolor 73]
 ;      set pcolor one-of [73 92]
 ;      set plankton patches with [pcolor = 73]
@@ -149,8 +153,8 @@ end
 ; eat plankton
 to eat
 if (pcolor = 73) [
-  set energy energy + 5;
-  set plankton plankton - 5;
+  set energy energy + Fish_Energy_Gain;
+  set plankton 0;
   set pcolor 92 ]
 end
 
@@ -198,10 +202,10 @@ ticks
 30.0
 
 BUTTON
-50
-127
-266
-160
+53
+63
+269
+96
 NIL
 setup
 NIL
@@ -215,40 +219,40 @@ NIL
 1
 
 SLIDER
-50
-271
-267
-304
+51
+225
+268
+258
 fish_population
 fish_population
 0
 100
-60.0
-3
-1
-NIL
-HORIZONTAL
-
-SLIDER
-50
-314
-267
-347
-fishermen_population
-fishermen_population
-0
-100
-2.0
+100.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-50
-230
-267
-263
+51
+268
+268
+301
+fishermen_population
+fishermen_population
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+51
+184
+268
+217
 plankton_multiply
 plankton_multiply
 0
@@ -260,10 +264,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-51
-165
-265
-198
+54
+101
+268
+134
 NIL
 go
 T
@@ -292,10 +296,10 @@ Predator_Reproduce_%
 HORIZONTAL
 
 SLIDER
-50
-361
-267
-394
+51
+315
+268
+348
 Fisherman_Energy_Gain
 Fisherman_Energy_Gain
 0
@@ -358,6 +362,36 @@ count patches with [pcolor = 73]
 17
 1
 11
+
+SLIDER
+51
+145
+269
+178
+plankton_growth_timer
+plankton_growth_timer
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+51
+359
+266
+392
+Fish_Energy_Gain
+Fish_Energy_Gain
+0
+500
+25.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
