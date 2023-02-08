@@ -35,7 +35,9 @@ to go
        set label energy
        move
        set energy energy - 5 ;; fishermen energy reduced per move
+       catch-fish
        energy-death
+       birth-fishermen
     ]
 
     tick
@@ -61,6 +63,14 @@ to eat-plankton
     ]
 end
 
+to catch-fish
+    let prey one-of fish-here
+    if prey != nobody[
+    ask prey [die]
+      set energy energy  +  Fisherman_Energy_Gain
+    ]
+end
+
 ; fish breed when they have enough energy
 to birth-fish
     if ( energy > 300)
@@ -70,6 +80,21 @@ to birth-fish
         [
             set energy 100
             set heading random 360
+        ]
+    ]
+end
+
+; fishermen reproduce when they have enough energy and based on a probability
+to birth-fishermen
+    if(energy > 300)
+    [
+        if (random-float 100 < Predator_Reproduce_%) [
+            set energy (energy / 2)
+            hatch 1
+            [
+                set energy 150
+                set heading random 360
+            ]
         ]
     ]
 end
@@ -195,6 +220,36 @@ NIL
 NIL
 NIL
 1
+
+SLIDER
+946
+309
+1135
+342
+Predator_Reproduce_%
+Predator_Reproduce_%
+0
+100
+50.0
+1
+1
+%
+HORIZONTAL
+
+SLIDER
+924
+221
+1099
+254
+Fisherman_Energy_Gain
+Fisherman_Energy_Gain
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
