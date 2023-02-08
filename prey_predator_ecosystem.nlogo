@@ -2,45 +2,86 @@
 breed [ fishermen fisherman ]   ; predator turtles are fishermen
 breed [ fish a-fish ]           ; prey turtles are fish
 
+globals [
+safe
+]
+
 turtles-own [ energy ]          ; energy is used to keep track of how much energy the turtle has
-patches-own [ growth ]          ; timer is used to keep track of how long it's been since food was last spawned
+patches-own [ water plankton land growth]          ; timer is used to keep track of how long it's been since food was last spawned
 
 to setup
-    clear-all
-    create-fishermen 10 [set shape "boat 3" set size 3] ;; temporary placeholder for creating boats
-    ask turtles [ set energy 100 ] ; set initial energy for all turtles
-    ask patches [ set growth 0 ]   ; set initial growth for all patches
-    reset-ticks
+  clear-all
+  set safe 1
+
+  spawn-plankton
+
+  ; land setup
+  ask n-of land_num patches [
+    set land safe ; fishes
+    let targets patches in-radius land-size
+    ask targets [set land safe set pcolor 62]
+  ]
+
+
+  create-fish fish_population[
+    setxy random-xcor random-ycor
+    set color grey
+    set shape "fish"
+    set size 1
+  ]
+
+  create-fishermen fishermen_population [set shape "boat 3" set size 3] ;; temporary placeholder for creating boats
+  ask turtles [ set energy 100 ] ; set initial energy for all turtles
+  ask patches [ set growth 10 ]   ; set initial growth for all patches
+
+  reset-ticks
 end
 
 to go
-    ask patches [
+
+  ask patches [ ifelse (land = safe) [
+    set pcolor 62
+    ]
+    [
+      set pcolor scale-color 84 plankton 6 0
 
     ]
 
-    ; Handles movement of fish
-    ask fish [
-        swim
-        set energy energy - 1 ; fish energy gets deducted after swimming
-        ;; eat here
-        energy-death ; checks the fish's energy then dies if no more energy
-    ]
+  ]
 
-    ; Asks fish to try birthing after moving
-    ask fish [
-        birth-fish
+  ;growth of plankton
+  ask patches [
+    if (plankton < 5)[
+      set plankton plankton + plankton_multiply
     ]
+  ]
+  diffuse plankton 1
 
-    ask fishermen [
-       set label energy
-       move
-       set energy energy - 5 ;; fishermen energy reduced per move
-       catch-fish
-       energy-death
-       birth-fishermen
-    ]
 
-    tick
+  ; Handles movement of fish
+  ask fish [
+    ;set label energy (to check energy)
+    swim
+    eat
+    set energy energy - 1 ; fish energy gets deducted after swimming
+    energy-death ; checks the fish's energy then dies if no more energy
+  ]
+
+  ; Asks fish to try birthing after moving
+  ask fish [
+    birth-fish
+  ]
+
+  ask fishermen [
+    set label energy
+    move
+    set energy energy - 5 ;; fishermen energy reduced per move
+    catch-fish
+    energy-death
+    birth-fishermen
+  ]
+
+  tick
 end
 
 ;;fishermen random movement
@@ -49,66 +90,75 @@ to move
   forward random 10
 end
 
-to spawn-food
-
+to spawn-plankton
+  ask patches [ set plankton random 3]
+  repeat 5 [ diffuse plankton 1]
+;  ask patches [ set pcolor scale-color 84 plankton 0 5]
 end
 
 ; fish eat plankton when they are on the same patch
 ; depending on the growth on patch
 to eat-plankton
-    if (growth > 0)
-    [
-        set energy energy + 10
-        set growth growth - 1
-    ]
+  if (growth > 0)
+  [
+    set energy energy + 10
+    set growth growth - 1
+  ]
 end
 
 to catch-fish
-    let prey one-of fish-here
-    if prey != nobody[
-    ask prey [die]
-      set energy energy  +  Fisherman_Energy_Gain
-    ]
+  let prey one-of fish-here
+  if prey != nobody[
+  ask prey [die]
+    set energy energy  +  Fisherman_Energy_Gain
+  ]
 end
 
 ; fish breed when they have enough energy
 to birth-fish
-    if ( energy > 300)
-    [
-        set energy energy - 250
-        hatch 1
-        [
-            set energy 100
-            set heading random 360
-        ]
-    ]
+  if ( energy > 300)
+  [
+      set energy energy - 250
+      hatch 1
+      [
+          set energy 100
+          set heading random 360
+      ]
+  ]
 end
 
 ; fishermen reproduce when they have enough energy and based on a probability
 to birth-fishermen
-    if(energy > 300)
-    [
-        if (random-float 100 < Predator_Reproduce_%) [
-            set energy (energy / 2)
-            hatch 1
-            [
-                set energy 150
-                set heading random 360
-            ]
-        ]
-    ]
+  if(energy > 300)
+  [
+      if (random-float 100 < Predator_Reproduce_%) [
+          set energy (energy / 2)
+          hatch 1
+          [
+              set energy 150
+              set heading random 360
+          ]
+      ]
+  ]
 end
 
- ; fish random movement
+; eat plankton
+to eat
+if (plankton > 0) [
+  set energy energy + 5;
+  set plankton plankton - 5 ]
+end
+
+; fish random movement
 to swim
-  right random 50
-  left random 50
-  forward random 5
+right random 50
+left random 50
+forward random 5
 end
 
- ; applicable for prey and predator, cheks for energy
+; applicable for prey and predator, checks for energy
 to energy-death
-  if energy < 0 [ die ]
+if energy < 0 [ die ]
 end
 
 to-report coinflip?
@@ -143,10 +193,10 @@ ticks
 30.0
 
 BUTTON
-47
+45
+42
+261
 75
-110
-108
 NIL
 setup
 NIL
@@ -160,55 +210,55 @@ NIL
 1
 
 SLIDER
-106
-130
-278
-163
-prey_init_pop
-prey_init_pop
+49
+277
+264
+310
+fish_population
+fish_population
 0
 100
-50.0
+99.0
+3
+1
+NIL
+HORIZONTAL
+
+SLIDER
+48
+320
+264
+353
+fishermen_population
+fishermen_population
+0
+100
+15.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-106
-177
-291
-210
-predator_init_pop
-predator_init_pop
+50
+236
+264
+269
+plankton_multiply
+plankton_multiply
 0
-100
-50.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-18
-286
-276
-319
-food_spawn_time
-food_spawn_time
-0
-100
-50.0
+5
+3.0
 1
 1
 NIL
 HORIZONTAL
 
 BUTTON
-120
-75
-183
-108
+46
+80
+260
+113
 NIL
 go
 T
@@ -222,34 +272,105 @@ NIL
 1
 
 SLIDER
-946
-309
-1135
-342
+48
+411
+262
+444
 Predator_Reproduce_%
 Predator_Reproduce_%
 0
 100
-50.0
+63.0
 1
 1
 %
 HORIZONTAL
 
 SLIDER
-924
-221
-1099
-254
+49
+367
+267
+400
 Fisherman_Energy_Gain
 Fisherman_Energy_Gain
 0
-100
-50.0
+500
+100.0
+10
+1
+NIL
+HORIZONTAL
+
+SLIDER
+327
+461
+499
+494
+land_num
+land_num
+0
+10
+7.0
 1
 1
 NIL
 HORIZONTAL
+
+SLIDER
+541
+461
+713
+494
+land-size
+land-size
+0
+10
+5.0
+1
+1
+NIL
+HORIZONTAL
+
+PLOT
+761
+156
+1072
+360
+Population
+time
+population
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"fish" 1.0 0 -16777216 true "" "plot count fish"
+"fishermen" 1.0 0 -5298144 true "" "plot count fishermen"
+
+MONITOR
+762
+91
+902
+144
+Fish
+count fish
+17
+1
+13
+
+MONITOR
+914
+91
+1070
+144
+Fishermen
+count fishermen
+17
+1
+13
 
 @#$#@#$#@
 ## WHAT IS IT?
