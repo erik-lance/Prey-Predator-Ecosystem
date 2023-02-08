@@ -40,15 +40,7 @@ to go
 
 ;  growth of plankton
   ask patches [
-    if (plankton < plankton_growth_timer)[
-      set plankton plankton + plankton_multiply
-    ]
-    if (plankton > plankton_growth_timer AND pcolor != 52)[
-      set pcolor 73
-    ]
-    if (plankton < plankton_growth_timer AND pcolor = 73)[
-      set pcolor 92
-    ]
+    grow-plankton
   ]
   diffuse plankton 1
 
@@ -62,12 +54,8 @@ to go
       eat
       set energy energy - 1 ; fish energy gets deducted after swimming
       energy-death ; checks the fish's energy then dies if no more energy
+      birth-fish ; Asks fish to try birthing after moving
     ]
-  ]
-
-  ; Asks fish to try birthing after moving
-  ask fish [
-    birth-fish
   ]
 
   ask fishermen [
@@ -94,24 +82,13 @@ to spawn-plankton
   ask patches[
     if pcolor = 92 [
       set plankton random plankton_growth_timer
-      if (plankton = plankton_growth_timer) [
+      if (plankton > plankton_growth_timer) [
         set pcolor 73]
 ;      set pcolor one-of [73 92]
 ;      set plankton patches with [pcolor = 73]
     ]
   ]
 end
-
-;DID NOT USE (?)
-; fish eat plankton when they are on the same patch
-; depending on the growth on patch
-;to eat-plankton
-;  if (growth > 0)
-;  [
-;    set energy energy + 10
-;    set growth growth - 1
-;  ]
-;end
 
 to catch-fish
   let prey one-of fish-here
@@ -126,12 +103,14 @@ end
 to birth-fish
   if ( energy > 300)
   [
-      set energy energy - 250
+    if (random-float 100 < Prey_Reproduce_%) [
+      set energy (energy / 2)
       hatch 1
       [
-          set energy 100
+          set energy 150
           set heading random 360
       ]
+    ]
   ]
 end
 
@@ -148,6 +127,18 @@ to birth-fishermen
           ]
       ]
   ]
+end
+
+to grow-plankton
+  if (plankton < plankton_growth_timer)[
+      set plankton plankton + plankton_multiply
+    ]
+    if (plankton > plankton_growth_timer AND pcolor != 52)[
+      set pcolor 73
+    ]
+    if (plankton < plankton_growth_timer AND pcolor = 73)[
+      set pcolor 92
+    ]
 end
 
 ; eat plankton
@@ -202,10 +193,10 @@ ticks
 30.0
 
 BUTTON
-53
-63
-269
-96
+52
+25
+268
+58
 NIL
 setup
 NIL
@@ -219,10 +210,10 @@ NIL
 1
 
 SLIDER
-51
-225
-268
-258
+13
+180
+136
+213
 fish_population
 fish_population
 0
@@ -234,25 +225,25 @@ NIL
 HORIZONTAL
 
 SLIDER
-51
-268
-268
-301
+145
+180
+286
+213
 fishermen_population
 fishermen_population
 0
 100
-50.0
+7.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-51
-184
-268
-217
+166
+127
+282
+160
 plankton_multiply
 plankton_multiply
 0
@@ -264,10 +255,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-54
+52
+68
+266
 101
-268
-134
 NIL
 go
 T
@@ -281,10 +272,10 @@ NIL
 1
 
 SLIDER
-50
-405
-267
-438
+38
+399
+255
+432
 Predator_Reproduce_%
 Predator_Reproduce_%
 0
@@ -296,10 +287,10 @@ Predator_Reproduce_%
 HORIZONTAL
 
 SLIDER
-51
-315
-268
-348
+42
+256
+259
+289
 Fisherman_Energy_Gain
 Fisherman_Energy_Gain
 0
@@ -328,7 +319,7 @@ true
 PENS
 "fish" 1.0 0 -16777216 true "" "plot count fish"
 "fishermen" 1.0 0 -5298144 true "" "plot count fishermen"
-"plankton" 1.0 0 -12345184 true "" "plot count patches with [pcolor = 83]"
+"plankton" 1.0 0 -12345184 true "" "plot count patches with [pcolor = 73]"
 
 MONITOR
 768
@@ -364,25 +355,25 @@ count patches with [pcolor = 73]
 11
 
 SLIDER
-51
-145
-269
-178
+16
+126
+160
+159
 plankton_growth_timer
 plankton_growth_timer
 0
 100
-50.0
+25.0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-51
-359
-266
-392
+42
+300
+257
+333
 Fish_Energy_Gain
 Fish_Energy_Gain
 0
@@ -391,6 +382,21 @@ Fish_Energy_Gain
 1
 1
 NIL
+HORIZONTAL
+
+SLIDER
+39
+359
+255
+392
+Prey_Reproduce_%
+Prey_Reproduce_%
+0
+100
+50.0
+1
+1
+%
 HORIZONTAL
 
 @#$#@#$#@
