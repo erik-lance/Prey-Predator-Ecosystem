@@ -2,32 +2,27 @@
 breed [ fishermen fisherman ]   ; predator turtles are fishermen
 breed [ fish a-fish ]           ; prey turtles are fish
 
-globals [
-  safe ;
-]
-
 turtles-own [ energy ]          ; energy is used to keep track of how much energy the turtle has
-patches-own [ water plankton land growth]          ; timer is used to keep track of how long it's been since food was last spawned
+patches-own [plankton growth]   ; timer is used to keep track of how long it's been since food was last spawned
 
 to setup
   clear-all
-  set safe 1
+
+  ask patches [set pcolor 52]; land setup
+
+  ask patch 0 0 [
+    ask patches in-radius 16
+    [set pcolor 92]
+   ]
 
   spawn-plankton
-   ask patches [ set pcolor scale-color turquoise plankton 0 5]
-  ; land setup
-  ask n-of land_num patches [
-    set land safe ; fishes
-    let targets patches in-radius land-size
-    ask targets [set land safe set pcolor 62]
-  ]
-
 
   create-fish fish_population[
-    setxy random-xcor random-ycor
     set color grey
     set shape "fish"
     set size 1
+    move-to one-of patches with [pcolor = 92 ]
+
   ]
 
   create-fishermen fishermen_population [set shape "boat 3" set size 3] ;; temporary placeholder for creating boats
@@ -39,7 +34,7 @@ end
 
 to go
 
-  ;growth of plankton
+;  growth of plankton
   ask patches [
     if (plankton < 5)[
       set plankton plankton + plankton_multiply
@@ -47,21 +42,17 @@ to go
   ]
   diffuse plankton 1
 
-  ask patches [ ifelse (land = safe) [
-    set pcolor 62
-    ]
-    [
-      set pcolor scale-color 83 plankton 6 0
-    ]
-  ]
-
   ; Handles movement of fish
   ask fish [
     ;set label energy (to check energy)
-    swim
-    eat
-    set energy energy - 1 ; fish energy gets deducted after swimming
-    energy-death ; checks the fish's energy then dies if no more energy
+    ifelse [pcolor] of patch-ahead 1 = 52 ;so that fish does not move on land
+    [lt random-float 360]
+    [
+      swim
+      eat
+      set energy energy - 1 ; fish energy gets deducted after swimming
+      energy-death ; checks the fish's energy then dies if no more energy
+    ]
   ]
 
   ; Asks fish to try birthing after moving
@@ -72,49 +63,53 @@ to go
   ask fishermen [
     set label energy
     move
-    set energy energy - 5 ;; fishermen energy reduced per move
+    if [pcolor] of patch-here != 52
+      [set energy energy - 5] ;; fishermen energy reduced per move
     catch-fish
     energy-death
     birth-fishermen
-  ]
+    ]
+
 
   tick
 end
 
-;;fishermen random movement
+;fishermen random movement
 to move
   ifelse coinflip? [right random 35][left random 35]
-  forward random 10
+  forward random 20
 end
 
 to spawn-plankton
-  ask patches [ set plankton random 3]
-  repeat 5 [ diffuse plankton 1]
-end
-
-; fish eat plankton when they are on the same patch
-; depending on the growth on patch
-to eat-plankton
-  if (growth > 0)
-  [
-    set energy energy + 10
-    set growth growth - 1
+  ask patches[
+    if pcolor = 92 [
+      set plankton random 10
+      if (plankton = 1) [
+        set pcolor 73]
+;      set pcolor one-of [73 92]
+;      set plankton patches with [pcolor = 73]
+    ]
   ]
 end
+
+;DID NOT USE (?)
+; fish eat plankton when they are on the same patch
+; depending on the growth on patch
+;to eat-plankton
+;  if (growth > 0)
+;  [
+;    set energy energy + 10
+;    set growth growth - 1
+;  ]
+;end
 
 to catch-fish
   let prey one-of fish-here
 
-  ifelse (([land] of patch-here = safe))[ ;fish cannot be caught when in land (safe)
-    swim
-    ]
-    [
       if prey != nobody[
         ask prey [die]
         set energy energy  +  Fisherman_Energy_Gain
       ]
-    ]
-
 end
 
 ; fish breed when they have enough energy
@@ -147,17 +142,16 @@ end
 
 ; eat plankton
 to eat
-if (plankton > 0) [
+if (pcolor = 73) [
   set energy energy + 5;
-  set plankton plankton - 5 ]
-
+  set pcolor 92 ]
 end
 
 ; fish random movement
 to swim
-right random 50
-left random 50
-forward random 5
+  right random 5
+  left random 5
+  forward random 3
 end
 
 ; applicable for prey and predator, checks for energy
@@ -222,7 +216,7 @@ fish_population
 fish_population
 0
 100
-99.0
+60.0
 3
 1
 NIL
@@ -237,7 +231,7 @@ fishermen_population
 fishermen_population
 0
 100
-15.0
+2.0
 1
 1
 NIL
@@ -353,6 +347,7 @@ true
 PENS
 "fish" 1.0 0 -16777216 true "" "plot count fish"
 "fishermen" 1.0 0 -5298144 true "" "plot count fishermen"
+"plankton" 1.0 0 -12345184 true "" "plot count patches with [pcolor = 83]"
 
 MONITOR
 768
@@ -375,6 +370,17 @@ count fishermen
 17
 1
 13
+
+MONITOR
+769
+58
+835
+103
+Plankton
+count patches with [pcolor = 73]
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
