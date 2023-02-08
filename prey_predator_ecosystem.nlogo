@@ -1,4 +1,3 @@
-
 ; Turtle Breed Types
 breed [ fishermen fisherman ]   ; predator turtles are fishermen
 breed [ fish a-fish ]           ; prey turtles are fish
@@ -20,7 +19,10 @@ to go
 
     ; Handles movement of fish
     ask fish [
-    
+        swim
+        set energy energy - 1 ; fish energy gets deducted after swimming
+        ;; eat here
+        energy-death ; checks the fish's energy then dies if no more energy
     ]
 
     ; Asks fish to try birthing after moving
@@ -36,7 +38,7 @@ to go
 end
 
 to move
-    
+
 end
 
 to spawn-food
@@ -58,15 +60,25 @@ to birth-fish
     if ( energy > 300)
     [
         set energy energy - 250
-        hatch 1 
-        [ 
-            set energy 100 
+        hatch 1
+        [
+            set energy 100
             set heading random 360
         ]
     ]
 end
 
+ ; fish random movement
+to swim
+  right random 50
+  left random 50
+  forward random 5
+end
 
+ ; applicable for prey and predator, cheks for energy
+to energy-death
+  if energy < 0 [ die ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 300
