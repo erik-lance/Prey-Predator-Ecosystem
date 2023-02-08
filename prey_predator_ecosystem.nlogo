@@ -36,8 +36,14 @@ to go
 
 ;  growth of plankton
   ask patches [
-    if (plankton < 5)[
+    if (plankton < 10)[
       set plankton plankton + plankton_multiply
+    ]
+    if (plankton > 10 AND pcolor != 52)[
+      set pcolor 73
+    ]
+    if (plankton < 10 AND pcolor = 73)[
+      set pcolor 92
     ]
   ]
   diffuse plankton 1
@@ -83,8 +89,8 @@ end
 to spawn-plankton
   ask patches[
     if pcolor = 92 [
-      set plankton random 10
-      if (plankton = 1) [
+      set plankton random 15
+      if (plankton > 10) [
         set pcolor 73]
 ;      set pcolor one-of [73 92]
 ;      set plankton patches with [pcolor = 73]
@@ -144,6 +150,7 @@ end
 to eat
 if (pcolor = 73) [
   set energy energy + 5;
+  set plankton plankton - 5;
   set pcolor 92 ]
 end
 
@@ -246,7 +253,7 @@ plankton_multiply
 plankton_multiply
 0
 5
-3.0
+1.0
 1
 1
 NIL
@@ -278,7 +285,7 @@ Predator_Reproduce_%
 Predator_Reproduce_%
 0
 100
-63.0
+44.0
 1
 1
 %
