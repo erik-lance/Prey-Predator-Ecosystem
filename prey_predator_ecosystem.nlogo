@@ -3,7 +3,7 @@ breed [ fishermen fisherman ]   ; predator turtles are fishermen
 breed [ fish a-fish ]           ; prey turtles are fish
 
 globals [
-safe
+  safe ;
 ]
 
 turtles-own [ energy ]          ; energy is used to keep track of how much energy the turtle has
@@ -14,7 +14,7 @@ to setup
   set safe 1
 
   spawn-plankton
-
+   ask patches [ set pcolor scale-color turquoise plankton 0 5]
   ; land setup
   ask n-of land_num patches [
     set land safe ; fishes
@@ -39,16 +39,6 @@ end
 
 to go
 
-  ask patches [ ifelse (land = safe) [
-    set pcolor 62
-    ]
-    [
-      set pcolor scale-color 84 plankton 6 0
-
-    ]
-
-  ]
-
   ;growth of plankton
   ask patches [
     if (plankton < 5)[
@@ -57,6 +47,13 @@ to go
   ]
   diffuse plankton 1
 
+  ask patches [ ifelse (land = safe) [
+    set pcolor 62
+    ]
+    [
+      set pcolor scale-color 83 plankton 6 0
+    ]
+  ]
 
   ; Handles movement of fish
   ask fish [
@@ -93,7 +90,6 @@ end
 to spawn-plankton
   ask patches [ set plankton random 3]
   repeat 5 [ diffuse plankton 1]
-;  ask patches [ set pcolor scale-color 84 plankton 0 5]
 end
 
 ; fish eat plankton when they are on the same patch
@@ -108,10 +104,17 @@ end
 
 to catch-fish
   let prey one-of fish-here
-  if prey != nobody[
-  ask prey [die]
-    set energy energy  +  Fisherman_Energy_Gain
-  ]
+
+  ifelse (([land] of patch-here = safe))[ ;fish cannot be caught when in land (safe)
+    swim
+    ]
+    [
+      if prey != nobody[
+        ask prey [die]
+        set energy energy  +  Fisherman_Energy_Gain
+      ]
+    ]
+
 end
 
 ; fish breed when they have enough energy
@@ -147,6 +150,7 @@ to eat
 if (plankton > 0) [
   set energy energy + 5;
   set plankton plankton - 5 ]
+
 end
 
 ; fish random movement
