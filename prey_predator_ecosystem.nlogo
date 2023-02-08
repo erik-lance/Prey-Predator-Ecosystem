@@ -7,6 +7,7 @@ patches-own [ growth ]          ; timer is used to keep track of how long it's b
 
 to setup
     clear-all
+    create-fishermen 10 [set shape "boat 3" set size 3] ;; temporary placeholder for creating boats
     ask turtles [ set energy 100 ] ; set initial energy for all turtles
     ask patches [ set growth 0 ]   ; set initial growth for all patches
     reset-ticks
@@ -31,14 +32,19 @@ to go
     ]
 
     ask fishermen [
-
+       set label energy
+       move
+       set energy energy - 5 ;; fishermen energy reduced per move
+       energy-death
     ]
 
     tick
 end
 
+;;fishermen random movement
 to move
-
+  ifelse coinflip? [right random 35][left random 35]
+  forward random 10
 end
 
 to spawn-food
@@ -78,6 +84,10 @@ end
  ; applicable for prey and predator, cheks for energy
 to energy-death
   if energy < 0 [ die ]
+end
+
+to-report coinflip?
+  report random 2 = 0
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -237,6 +247,15 @@ arrow
 true
 0
 Polygon -7500403 true true 150 0 0 150 105 150 105 293 195 293 195 150 300 150
+
+boat 3
+false
+0
+Polygon -1 true false 63 162 90 207 223 207 290 162
+Rectangle -6459832 true false 150 32 157 162
+Polygon -13345367 true false 150 34 131 49 145 47 147 48 149 49
+Polygon -7500403 true true 158 37 172 45 188 59 202 79 217 109 220 130 218 147 204 156 158 156 161 142 170 123 170 102 169 88 165 62
+Polygon -7500403 true true 149 66 142 78 139 96 141 111 146 139 148 147 110 147 113 131 118 106 126 71
 
 box
 false
