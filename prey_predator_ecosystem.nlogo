@@ -193,9 +193,9 @@ ticks
 30.0
 
 BUTTON
-52
+40
 25
-268
+256
 58
 NIL
 setup
@@ -255,10 +255,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-52
-68
-266
-101
+144
+72
+246
+105
 NIL
 go
 T
@@ -398,6 +398,23 @@ Prey_Reproduce_%
 1
 %
 HORIZONTAL
+
+BUTTON
+56
+72
+137
+105
+go
+go
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
