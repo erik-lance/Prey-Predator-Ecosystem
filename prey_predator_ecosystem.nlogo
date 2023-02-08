@@ -197,10 +197,10 @@ ticks
 30.0
 
 BUTTON
-45
-42
-261
-75
+50
+127
+266
+160
 NIL
 setup
 NIL
@@ -214,10 +214,10 @@ NIL
 1
 
 SLIDER
-49
-277
-264
-310
+50
+271
+267
+304
 fish_population
 fish_population
 0
@@ -229,10 +229,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-48
-320
-264
-353
+50
+314
+267
+347
 fishermen_population
 fishermen_population
 0
@@ -245,9 +245,9 @@ HORIZONTAL
 
 SLIDER
 50
-236
-264
-269
+230
+267
+263
 plankton_multiply
 plankton_multiply
 0
@@ -259,10 +259,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-46
-80
-260
-113
+51
+165
+265
+198
 NIL
 go
 T
@@ -276,10 +276,10 @@ NIL
 1
 
 SLIDER
-48
-411
-262
-444
+50
+405
+267
+438
 Predator_Reproduce_%
 Predator_Reproduce_%
 0
@@ -291,10 +291,10 @@ Predator_Reproduce_%
 HORIZONTAL
 
 SLIDER
-49
-367
+50
+361
 267
-400
+394
 Fisherman_Energy_Gain
 Fisherman_Energy_Gain
 0
@@ -336,10 +336,10 @@ NIL
 HORIZONTAL
 
 PLOT
-761
-156
-1072
-360
+768
+180
+1067
+444
 Population
 time
 population
@@ -355,10 +355,10 @@ PENS
 "fishermen" 1.0 0 -5298144 true "" "plot count fishermen"
 
 MONITOR
-762
-91
-902
-144
+768
+113
+903
+166
 Fish
 count fish
 17
@@ -366,10 +366,10 @@ count fish
 13
 
 MONITOR
-914
-91
-1070
-144
+932
+112
+1068
+165
 Fishermen
 count fishermen
 17
