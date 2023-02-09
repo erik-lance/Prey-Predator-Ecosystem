@@ -38,7 +38,11 @@ to setup
 end
 
 to go
-
+  ; Stops at 500 ticks
+  if stopper = true
+  [
+    if ticks > 500 [stop]
+  ]
   ; growth of plankton
   ask patches [
     grow-plankton
@@ -417,6 +421,27 @@ NIL
 NIL
 NIL
 NIL
+1
+
+SWITCH
+893
+58
+996
+91
+stopper
+stopper
+1
+1
+-1000
+
+TEXTBOX
+886
+31
+979
+49
+Stops at tick 500
+11
+0.0
 1
 
 @#$#@#$#@
