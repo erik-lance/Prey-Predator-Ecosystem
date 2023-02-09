@@ -47,7 +47,11 @@ to go
   ask patches [
     grow-plankton
   ]
-  diffuse plankton 1
+
+  if plankton_spread = true
+  [
+    diffuse plankton 1
+  ]
 
   ; Handles movement of fish
   ask fish [
@@ -287,7 +291,7 @@ Predator_Reproduce_%
 Predator_Reproduce_%
 0
 100
-44.0
+50.0
 1
 1
 %
@@ -424,25 +428,36 @@ NIL
 1
 
 SWITCH
-893
-58
-996
-91
+846
+22
+949
+55
 stopper
 stopper
-1
+0
 1
 -1000
 
 TEXTBOX
-886
-31
-979
-49
-Stops at tick 500
+790
+23
+840
+51
+Stops at\ntick 500
 11
 0.0
 1
+
+SWITCH
+844
+64
+992
+97
+plankton_spread
+plankton_spread
+1
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
