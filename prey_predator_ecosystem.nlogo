@@ -3,7 +3,7 @@ breed [ fishermen fisherman ]   ; predator turtles are fishermen
 breed [ fish a-fish ]           ; prey turtles are fish
 
 turtles-own [ energy ]          ; energy is used to keep track of how much energy the turtle has
-patches-own [plankton growth]   ; timer is used to keep track of how long it's been since food was last spawned
+patches-own [plankton]          ; timer is used to keep track of how long it's been since food was last spawned
 
 to setup
   clear-all
@@ -14,9 +14,10 @@ to setup
     ask patches in-radius 16
     [set pcolor 92]
    ]
+  
+  spawn-plankton ; edit plankton growth
 
-  spawn-plankton
-
+  ; create fish based on the fish_population slider
   create-fish fish_population[
     set color grey
     set shape "fish"
@@ -25,20 +26,20 @@ to setup
 
   ]
 
+  ; create fishermen based on the fishermen_population slider
   create-fishermen fishermen_population [
     set shape "boat 3"
     set size 3
     move-to one-of patches with [pcolor = 92 ]
   ]
   ask turtles [ set energy 100 ] ; set initial energy for all turtles
-  ask patches [ set growth 10 ]   ; set initial growth for all patches
 
   reset-ticks
 end
 
 to go
 
-;  growth of plankton
+  ; growth of plankton
   ask patches [
     grow-plankton
   ]
@@ -78,18 +79,22 @@ to move
   forward random 20
 end
 
+; Fixes timer for plankton
 to spawn-plankton
-  ask patches[
-    if pcolor = 92 [
+  ask patches with [pcolor = 92] [set pcolor one-of [92 73]] ; spawn food
+  ask patches
+  [
+    if pcolor = 92
+    [
+      ; sets all patches with color 92 to a random plankton timer
+      ; to a number less than the plankton_growth_timer
       set plankton random plankton_growth_timer
-      if (plankton > plankton_growth_timer) [
-        set pcolor 73]
-;      set pcolor one-of [73 92]
-;      set plankton patches with [pcolor = 73]
     ]
   ]
+
 end
 
+; function for fishermen to catch fish
 to catch-fish
   let prey one-of fish-here
 
@@ -99,7 +104,7 @@ to catch-fish
       ]
 end
 
-; fish breed when they have enough energy
+; fish breed when they have enough energy and based on a probability
 to birth-fish
   if ( energy > 300)
   [
@@ -136,9 +141,6 @@ to grow-plankton
     if (plankton > plankton_growth_timer AND pcolor != 52)[
       set pcolor 73
     ]
-    if (plankton < plankton_growth_timer AND pcolor = 73)[
-      set pcolor 92
-    ]
 end
 
 ; eat plankton
@@ -161,6 +163,7 @@ to energy-death
 if energy < 0 [ die ]
 end
 
+; random number generator
 to-report coinflip?
   report random 2 = 0
 end
