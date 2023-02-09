@@ -1,6 +1,13 @@
 # Prey-Predator-Ecosystem
 A requirement in CMPLXSY using NetLogo to create a prey-predator model. Made in NetLogo.
 
+**Group 5**
+- Enriquez, Janielle Shane
+- Mangoba, Michael Jhullian
+- Rafanan, Clyla
+- Sze, Gelson
+- Tiongquico, erik
+
 ## Model
 The model is a prey-predator model where the prey are the fish and the predator are the fishermen. The source of food for fish are the plankton in the patches (noted by the greenish color).
 
