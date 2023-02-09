@@ -14,7 +14,7 @@ to setup
     ask patches in-radius 16
     [set pcolor 92]
    ]
-  
+
   spawn-plankton ; edit plankton growth
 
   ; create fish based on the fish_population slider
@@ -189,11 +189,11 @@ GRAPHICS-WINDOW
 16
 -16
 16
-0
-0
+1
+1
 1
 ticks
-30.0
+10.0
 
 BUTTON
 40
@@ -366,7 +366,7 @@ plankton_growth_timer
 plankton_growth_timer
 0
 100
-25.0
+40.0
 1
 1
 NIL
