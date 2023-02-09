@@ -455,7 +455,7 @@ SWITCH
 97
 plankton_spread
 plankton_spread
-1
+0
 1
 -1000
 
