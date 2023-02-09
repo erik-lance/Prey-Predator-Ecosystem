@@ -135,10 +135,10 @@ to birth-fishermen
 end
 
 to grow-plankton
-  if (plankton < plankton_growth_timer)[
-      set plankton plankton + plankton_multiply
+  if (plankton > 0)[
+      set plankton plankton - plankton_multiply
     ]
-    if (plankton > plankton_growth_timer AND pcolor != 52)[
+    if (plankton <= 0 AND pcolor = 92)[
       set pcolor 73
     ]
 end
@@ -147,7 +147,7 @@ end
 to eat
 if (pcolor = 73) [
   set energy energy + Fish_Energy_Gain;
-  set plankton 0;
+  set plankton plankton_growth_timer;
   set pcolor 92 ]
 end
 
