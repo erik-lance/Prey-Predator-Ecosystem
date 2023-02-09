@@ -41,7 +41,7 @@ to go
   ; Stops at 500 ticks
   if stopper = true
   [
-    if ticks > 500 [stop]
+    if ticks >= 500 [stop]
   ]
   ; growth of plankton
   ask patches [
